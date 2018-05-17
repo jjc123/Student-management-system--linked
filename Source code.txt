@@ -1,0 +1,317 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct Node
+{
+    char num[10], name[20], xibie[20],Emil[20],phone[20];   //num是学号 name是名字
+    struct Node *next;
+} Node;
+typedef struct Node *LinkList; /* 定义LinkList */
+int i=0;         //定义一个全局变量，用于记录有多少学生
+int InitList(LinkList *L)
+{
+    *L=(LinkList)malloc(sizeof(Node)); /* 产生头结点,并使L指向此头结点 */
+    if(!(*L)) /* 存储分配失败 */
+        return 0;
+    (*L)->next=NULL; /* 指针域为空 */
+
+    return 1;
+}
+//录入数据
+void Entry(LinkList L)      //添加学生成员
+{
+    LinkList p= L;
+    char ch;
+    do
+    {
+        LinkList NewNode=(LinkList)malloc(sizeof(Node));
+        i++;//   i代表学生人数
+        printf("请输入学生的学号\n");
+        scanf("%s",NewNode->num);
+        printf("请输入学生的姓名\n");
+        scanf("%s",NewNode->name);
+        printf("请输入学生的系别\n");
+        scanf("%s",NewNode->xibie);
+        printf("请输入学生的邮箱：\n");
+        scanf("%s",NewNode->Emil);
+        printf("请输入学生的电话：\n");
+        scanf("%s",NewNode->phone);
+        NewNode->next=p->next;
+        p->next=NewNode;
+        getchar();
+        printf("-----继续录入请按任意键---退出录入请按N-----\n");
+        scanf("%c",&ch);
+    }
+    while(ch!='N'&&ch!='n');  //判断是否继续的条件
+}
+//查找数据
+void Find(LinkList L)
+{
+    int t;   //xuehaowei0表示没有找到，1为找到相关学生
+    char ch,x[20];
+    if(i==0)     //如果i=0，则说明没有数据
+    {
+        printf("没有学生：\n");
+    }
+    else do
+        {
+            int xuehao=0;
+            printf("\t按学号查找：\n");
+            printf("\t请输入学生学号");
+            scanf("%s",&x);
+            getchar();
+            LinkList p=L->next;
+            while(p)
+            {
+                if(!strcmp(p->num,x)) /* 找到这样的数据元素 */
+                {
+                    printf("所查学生的学号为：%s\n",p->num);
+                    printf("          姓名为：%s\n",p->name);
+                    printf("          系别为：%s\n",p->xibie);
+                    printf("          邮箱为：%s\n",p->Emil);
+                    printf("          电话为：%s\n",p->phone);
+                    xuehao=1;                       //找到一个学生则变1
+                    break;
+                }
+                p=p->next;
+            }
+            if(xuehao==0)                  //为0的时候说明没找到
+                printf("该学生不存在!\n");
+            printf("-----继续录入请按任意键---退出录入请按N-----\n");
+            scanf("%c",&ch);
+        }
+        while(ch!='N'&&ch!='n'); //判断是否继续的条件
+}
+void Change(LinkList L)      //修改数据
+{
+    long x;         //n是输入的学号，q是修改后的学号
+    int a,b=0,c,ch,N;
+    char w[20],h[20],T[20],q[20],n[20];  //q是修改后学号  w是修改后的系别 h是修改后的邮箱  T是修改后的电话
+    if(i==0)           //如果i=0，说明没有数据
+    {
+        printf("没有学生成员\n");
+    }
+    else do
+        {
+            printf("请输入你要修改学生的学号：");
+            scanf("%s",&n);
+            getchar();
+            LinkList p=L->next;
+            while(p)
+            {
+                if(!strcmp(n,p->num))
+                {
+                    printf("1:修改学生的学号：\n");
+                    printf("2:修改学生的系别：\n");
+                    printf("3:修改学生的邮箱：\n");
+                    printf("4:修改学生的电话：\n");
+                    printf("请输入选项：");
+                    scanf("%d",&c);
+                    switch(c)
+                    {
+                    case 1:
+                        printf("该学生学号为：%s\n",p->num);
+                        printf("修改为：\n");
+                        scanf("%s",q);
+                        strcpy(p->num,q);
+                        break;
+                    case 2:
+                        printf("该学生的系别为：%s\n",p->xibie);
+                        printf("修改为：\n");
+                        scanf("%s",w);
+                        strcpy(p->xibie,w);
+                        break;
+                    case 3:
+                        printf("该学生的邮箱为：%s\n",p->Emil);
+                        printf("修改为：\n");
+                        scanf("%s",h);
+                        strcpy(p->Emil,h);
+                        break;
+                    case 4:
+                        printf("该学生的电话为：%s\n",p->phone);
+                        printf("修改为：\n");
+                        scanf("%s",T);
+                        strcpy(p->phone,T);
+                        break;
+                    default :
+                        printf("输入错误！\n");
+                    }
+                }
+                p=p->next;
+            }
+            printf("-----继续录入请按任意键---退出录入请按N-----\n");
+            getchar();
+            ch=getchar();
+        }
+        while(ch!='N'&&ch!='n'); //判断是否继续的条件
+}
+//删除数据
+void Del(LinkList L)
+{
+    char ch;
+    long t,j,s,q=0;
+    char n[20];
+    do
+    {
+        int x=0;
+        if(i==0)
+            printf("没有学生数据可以删除！\n");
+        else
+        {
+            printf("请输入要删除学生的学号：");
+            scanf("%s",&n);
+            LinkList p=L;
+            LinkList q;
+            while(p->next)
+            {
+                if(!strcmp(p->next->num,n)) /* 找到这样的数据元素 */
+                {
+                    x=1;
+                    printf("您将要删除学生的数据如下：\n");
+                    printf("%s %s %s %s %s \n",p->next->num,p->next->name,p->next->xibie,p->next->Emil,p->next->phone);
+                    if(i==1)               //如果只有一个学生，则直接删除即可
+                    {
+                        i--;
+                        L->next=NULL;
+                        printf("1数据已删除！\n");
+                    }
+                    else               //如果有多个学生，则从该学生开始，后面学生的数据依次覆盖前面学生的数据
+                    {
+                        i--;
+                        q=p->next;
+                        p->next=q->next;
+                        free(q);
+                         printf("2数据已删除！\n");
+                    }
+                     break;
+                }
+                p=p->next;
+            }
+            if(x==0)
+            {
+                printf("没有该同学\n");
+            }
+        }
+        getchar();
+        printf("-----继续录入请按任意键---退出录入请按N-----\n");
+        scanf("%c",&ch);
+    }
+    while(ch!='N'&&ch!='n');  //判断是否继续的条件
+}
+//浏览数据
+void Show(LinkList L)
+{
+    long d;
+    if(i==0)
+        printf("没有数据，请先输入数据：\n");
+    else
+    {
+        LinkList p=L->next;
+        printf("打印顺序为：\n学号、 姓名、 系别、 邮箱、 电话：\n");
+        while(p)
+        {
+            printf("%s\t%s\t%s\t%s\t%s\t\n",p->num,p->name,p->xibie,p->Emil,p->phone);
+            p=p->next;
+        }
+    }
+}
+int ListInsert(LinkList L)
+{
+    int j=1,k;
+    printf("请输入要插入的位置:");
+    scanf("%d",&k);
+    if(k<=0)
+    {
+        printf("不能小于等于0\n");
+        return 0;
+    }
+    if(k>i+1)
+    {
+        printf("当前学生只有 %d 人小于%d 人\n",i,k);
+        return 1;
+    }
+    LinkList p;
+    p = L;
+    LinkList NewNode=(LinkList)malloc(sizeof(Node));
+    printf("请输入学生的学号\n");
+    scanf("%s",NewNode->num);
+    printf("请输入学生的姓名\n");
+    scanf("%s",NewNode->name);
+    printf("请输入学生的系别\n");
+    scanf("%s",NewNode->xibie);
+    printf("请输入学生的邮箱：\n");
+    scanf("%s",NewNode->Emil);
+    printf("请输入学生的电话：\n");
+    scanf("%s",NewNode->phone);
+
+    while (p && j < i)     /* 寻找第i个结点 */
+    {
+        p = p->next;
+        ++j;
+    }
+    if (!p || j > i)
+        return 0;   /* 第i个元素不存在 */
+    NewNode->next = p->next;      /* 将p的后继结点赋值给s的后继  */
+    p->next = NewNode;          /* 将s赋值给p的后继 */
+    i++;//   i代表学生人数
+    return 1;
+}
+//主函数  1.学生通信录管理系统（包括创建，查询，插入，删除，修改，查看）
+int main()
+{
+        LinkList L;
+    int w;
+    printf("您所使用的是南阳理工学院--------------------------\n");
+    printf("---------------计算机与信息工程学院\n");
+    printf("++++++++++++学生通信录管理系统++++++++++++++++++++++++++\n");
+    printf("\n");
+    printf("\n");
+    printf("++++++++++++++++++++为了能有效保存您的数据，请根据提示操作++++++++\n");
+    printf("--------------------------------------------------------------------------------\n");
+    do
+    {
+        printf("\t\t********************************【主菜单】*\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[1]:录入数据：\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[2]:修改数据：\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[3]:查找数据：\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[4]:删除数据：\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[5]:插入数据：\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[6]:浏览数据：\n");
+        printf("\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~+[0]:退出系统：\n");
+        printf("请输入选项：");
+        scanf("%d",&w);
+        switch(w)
+        {
+        case 1:
+            InitList(&L);
+            Entry(L);
+            break;
+        case 2:
+            Change(L);
+            break;
+        case 3:
+            Find(L);
+            break;
+        case 4:
+            Del(L);
+            break;
+        case 5:
+            if(ListInsert(L))
+            {
+                printf("插入成功！\n");
+            };
+            break;
+        case 6:
+            Show(L);
+            break;
+        case 0:
+            w=0;
+            break;
+        default:
+            printf("输入错误！\n");
+            break;
+        }
+    }
+    while(w!=0);
+    return 0;
+}
